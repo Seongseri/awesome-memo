@@ -49,6 +49,7 @@ async function readMemo() {
   const ul = document.querySelector("#memo_ul");
   ul.innerHTML = " ";
   jsonRes.forEach(displayMemo);
+  window.addEventListener("load", readMemo);
 }
 
 readMemo();
