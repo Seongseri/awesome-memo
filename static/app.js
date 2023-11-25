@@ -44,12 +44,27 @@ function displayMemo(memo) {
 }
 
 async function readMemo() {
-  const res = await fetch("/memos");
+  const sortedSelect = document.querySelector("#sorted-select");
+  let sort_by, order;
+  switch (sortedSelect.value) {
+    case "ASC":
+      sort_by = "content";
+      order = "asc";
+      break;
+    case "DESC":
+      sort_by = "content";
+      order = "desc";
+      break;
+    case "TIME":
+      sort_by = "id";
+      order = "desc";
+      break;
+  }
+  const res = await fetch(`/memos?sort_by=${sort_by}&order=${order}`);
   const jsonRes = await res.json();
   const ul = document.querySelector("#memo_ul");
   ul.innerHTML = " ";
   jsonRes.forEach(displayMemo);
-  window.addEventListener("load", readMemo);
 }
 
 readMemo();
@@ -76,6 +91,7 @@ function handleSubmit(event) {
 }
 
 const form = document.querySelector("#memo-form");
+document.querySelector("#sorted-select").addEventListener("change", readMemo);
 form.addEventListener("submit", handleSubmit);
 
 readMemo();

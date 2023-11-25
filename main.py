@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
-
+from typing import List, Optional
 class Memo(BaseModel):
     id:int 
     content:str
@@ -16,8 +16,14 @@ def create_memo(memo:Memo):
     return '메모 추가에 성공했습니다.'
 
 @app.get("/memos")
-def read_memo():
+def read_memo(sort_by: Optional[str] = None, order: Optional[str] = 'asc'):
+    global memos
+    if sort_by:
+        memos = sorted(memos, key=lambda x: getattr(x, sort_by, ''))
+        if order == 'desc':
+            memos.reverse()
     return memos
+
     
     
 @app.put("/memos/{memo_id}")
